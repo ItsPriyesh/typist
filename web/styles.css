@@ -1,0 +1,19 @@
+@import 'https://fonts.googleapis.com/css?family=Space+Mono';
+
+.content {
+  position:absolute;
+  height: 400px;
+  width: 600px;
+  left: 50%;
+  top: 50%;
+  margin-top: -200px;
+  margin-left: -300px;
+}
+
+body {
+  background-color: #282c34;
+  color: #97c278;
+}
+.words-container {
+  font-family: 'Space Mono', monospace;
+}
