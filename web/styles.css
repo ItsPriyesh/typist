@@ -1,5 +1,12 @@
 @import 'https://fonts.googleapis.com/css?family=Space+Mono';
 
+:root {
+  --primary-color: #abb2bf;
+  --error-color: #e06c75;
+  --success-color: #98c379;
+  --bg-color: #282c34;
+}
+
 .content {
   position:absolute;
   height: 400px;
@@ -11,9 +18,29 @@
 }
 
 body {
-  background-color: #282c34;
-  color: #97c278;
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  -webkit-user-select: none;
 }
-.words-container {
+
+.words-container p {
   font-family: 'Space Mono', monospace;
+  font-size: 22px;
+  line-height: 2.5ex;
+  max-height: 7.5ex;
+  overflow: hidden;
+  text-align: justify;
+}
+
+.input {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  border: 0;
+  background: none;
+  font-size: 24px;
+  outline: 0;
+  width: 100%;
+  color: var(--primary-color);
+  tap-highlight-color: rgba(0,0,0,0);
+  touch-callout: none;
 }

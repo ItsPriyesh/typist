@@ -12,7 +12,7 @@ object Main extends JSApp {
 
   @JSExport
   def main() = {
-    jQuery(".words-container").append(List.fill(666) { "gg" } .mkString(" "))
+    jQuery(".words-container").append("<p>" + Words.All + "</p>")
     dom.document.addEventListener("keyup", (e: KeyboardEvent) => handleKeyPress(e.key), useCapture = false)
   }
 
