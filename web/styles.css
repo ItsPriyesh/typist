@@ -7,7 +7,13 @@
   --bg-color: #282c34;
 }
 
-.content {
+body {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  -webkit-user-select: none;
+}
+
+#content {
   position:absolute;
   height: 400px;
   width: 600px;
@@ -17,13 +23,7 @@
   margin-left: -300px;
 }
 
-body {
-  background-color: var(--bg-color);
-  color: var(--primary-color);
-  -webkit-user-select: none;
-}
-
-.words-container p {
+#words-container {
   font-family: 'Space Mono', monospace;
   font-size: 22px;
   line-height: 2.5ex;
@@ -32,7 +32,8 @@ body {
   text-align: justify;
 }
 
-.input {
+#input {
+  margin-top: 30px;
   text-align: center;
   font-family: 'Space Mono', monospace;
   border: 0;
