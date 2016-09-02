@@ -1,9 +1,8 @@
 package me.priyesh.typist
 
-import me.priyesh.typist.Evaluator.{Failure, Success}
 import monix.execution.Ack.Continue
-import monix.execution.Cancelable
-import monix.reactive.{Observable, OverflowStrategy}
+import monix.execution.{Ack, Cancelable}
+import monix.reactive.{Observable, Observer, OverflowStrategy}
 import org.scalajs.dom
 import org.scalajs.dom.{EventTarget, KeyboardEvent}
 
@@ -11,6 +10,8 @@ import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import org.scalajs.jquery.jQuery
 import monix.execution.Scheduler.Implicits.global
+
+import scala.concurrent.Future
 
 @JSExport
 object App extends JSApp {
@@ -37,7 +38,7 @@ object App extends JSApp {
     jQuery("#words-container").append(words.mkString(" "))
 
     val input = dom.window.document.getElementById("input")
-    Evaluator.run(words, keyPresses(input)).subscribe(result => {
+    StringEvaluator.run(words, keyPresses(input), _ == _).subscribe(result => {
       result match {
         case Success(s) => println("Success")
         case Failure(s) => println("Failure")
@@ -45,6 +46,16 @@ object App extends JSApp {
       Continue
     })
 
+  }
+
+  class WordRenderer extends Observer[Result[String]]{
+    override def onNext(elem: Result[String]): Future[Ack] = {
+      Continue
+    }
+
+    override def onError(ex: Throwable): Unit = ???
+
+    override def onComplete(): Unit = ???
   }
 
   def keyPresses(target: EventTarget): Observable[String] = {
