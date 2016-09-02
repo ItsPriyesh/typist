@@ -1,6 +1,6 @@
 package me.priyesh.typist
 
-import me.priyesh.typist.WordOps.Word
+import me.priyesh.typist.Evaluator.{Failure, Success}
 import monix.execution.Ack.Continue
 import monix.execution.Cancelable
 import monix.reactive.{Observable, OverflowStrategy}
@@ -32,29 +32,19 @@ object App extends JSApp {
   def main() = {
     dom.document.body appendChild Page.body.render
 
-    val words: List[Word] = WordOps.from("mist enveloped the ship three hours out from port the face of the moon was in shadow a shining crescent far beneath the flying vessel".split(" ").toList)
+    val words: List[String] = "mist enveloped the ship three hours out from port the face of the moon was in shadow a shining crescent far beneath the flying vessel".split(" ").toList
 
-    jQuery("#words-container").append(words.map(WordOps.html).mkString(" "))
+    jQuery("#words-container").append(words.mkString(" "))
 
     val input = dom.window.document.getElementById("input")
-    // h, e, l, l, o,  , w, o, r, l, d,  ,
-    // hello, world
-    val keyObservable = keyPresses(input)
-    keyObservable
-      .subscribe(s => {
-        println(s)
-        Continue
-      })
+    Evaluator.run(words, keyPresses(input)).subscribe(result => {
+      result match {
+        case Success(s) => println("Success")
+        case Failure(s) => println("Failure")
+      }
+      Continue
+    })
 
-  }
-
-  def handleKeyPress(expected: String, input: String) = {
-    input match {
-      case "Backspace" =>
-      case " " =>
-      case i if i == expected =>
-      case _ =>
-    }
   }
 
   def keyPresses(target: EventTarget): Observable[String] = {
