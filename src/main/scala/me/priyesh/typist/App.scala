@@ -8,7 +8,6 @@ import org.scalajs.dom.{EventTarget, KeyboardEvent}
 
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
-import org.scalajs.jquery.jQuery
 import monix.execution.Scheduler.Implicits.global
 
 import scala.concurrent.Future
@@ -35,7 +34,6 @@ object App extends JSApp {
 
     val words: List[String] = "mist enveloped the ship three hours out from port the face of the moon was in shadow a shining crescent far beneath the flying vessel".split(" ").toList
 
-    jQuery("#words-container").append(words.mkString(" "))
 
     val input = dom.window.document.getElementById("input")
     StringEvaluator.run(words, keyPresses(input), _ == _).subscribe(result => {
@@ -48,14 +46,19 @@ object App extends JSApp {
 
   }
 
-  class WordRenderer extends Observer[Result[String]]{
+  class WordRenderer(containerSelector: String, words: List[String]) extends Observer[Result[String]] {
+    import org.scalajs.jquery.jQuery
+
+    jQuery(containerSelector).append(words.mkString(" "))
+
     override def onNext(elem: Result[String]): Future[Ack] = {
       Continue
     }
 
-    override def onError(ex: Throwable): Unit = ???
+    
 
-    override def onComplete(): Unit = ???
+    override def onError(ex: Throwable): Unit = ()
+    override def onComplete(): Unit = ()
   }
 
   def keyPresses(target: EventTarget): Observable[String] = {
