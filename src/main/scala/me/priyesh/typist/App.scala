@@ -33,15 +33,20 @@ object App extends JSApp {
     val input = dom.window.document.getElementById("input").asInstanceOf[HTMLInputElement]
 
     jQuery("#words-container").append(words.mkString(" "))
-    StringEvaluator.run(words.toList, new InputEmitter(input))
+    StringEvaluator.run(words.toList, new InputEmitter(input)).startWith(Seq(Pending))
       .foldLeftL(Coeval(Words(remaining = words.map(Word(_)).toList))) { (words, result) =>
-        val advanced = words.advance(result match {
-          case Success(s) => Correct
-          case Failure(e, a) => Incorrect
-        })
-        jQuery("#words-container").empty()
-        jQuery("#words-container").append(words.render)
-        advanced
+        println(s"${words.completed} ${words.remaining} $result")
+        if (result == Pending) {
+          words
+        } else {
+          val advanced = words.advance(result match {
+            case Success(s) => Correct
+            case Failure(e, a) => Incorrect
+          })
+          jQuery("#words-container").empty()
+          jQuery("#words-container").append(words.render)
+          advanced
+        }
       }.runAsync
     // .subscribe(new WordRenderer("#words-container", words))
   }

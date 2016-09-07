@@ -2,7 +2,8 @@ package me.priyesh.typist
 
 import monix.reactive.Observable
 
-sealed trait Result[A] { def expected: A }
+sealed trait Result[A]
+case object Pending extends Result[Nothing]
 case class Success[A](expected: A) extends Result[A]
 case class Failure[A](expected: A, actual: A) extends Result[A]
 
