@@ -4,7 +4,7 @@ import monix.reactive.Observable
 
 sealed trait Result[A] { def expected: A }
 case class Success[A](expected: A) extends Result[A]
-case class Failure[A](expected: A) extends Result[A]
+case class Failure[A](expected: A, actual: A) extends Result[A]
 
 trait Evaluator[T] {
   def evaluate(exp: T, act: T): Result[T]
@@ -12,5 +12,5 @@ trait Evaluator[T] {
 }
 
 object StringEvaluator extends Evaluator[String] {
-  def evaluate(exp: String, act: String): Result[String] = if (exp == act) Success(exp) else Failure(exp)
+  def evaluate(exp: String, act: String): Result[String] = if (exp == act) Success(exp) else Failure(exp, act)
 }

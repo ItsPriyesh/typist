@@ -10,7 +10,10 @@ final class InputEmitter(target: HTMLInputElement, eventType: String = "keyup") 
   override def unsafeSubscribeFn(subscriber: Subscriber[String]): Cancelable = {
     Observable.unsafeCreate[String] { subscriber =>
       val listener = (e: KeyboardEvent) => {
-        if (e.key == " ") subscriber.onNext(target.value.trim)
+        if (e.key == " ") {
+          subscriber.onNext(target.value.trim)
+          target.value = ""
+        }
       }
       target.addEventListener(eventType, listener)
       Cancelable(() => target.removeEventListener(eventType, listener))
