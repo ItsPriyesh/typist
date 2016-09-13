@@ -11,7 +11,7 @@ final class InputEmitter(target: HTMLInputElement) extends Observable[String] {
     keyboardEvents(target)
       .filter(_.key == " ")
       .map(_ => {
-        // TODO: Fix race condition
+        // TODO: Fix race (next item emits before target is cleared)
         val text = target.value.trim
         target.value = ""
         text
