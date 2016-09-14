@@ -15,8 +15,8 @@ class WordsState(val completed: List[Result[Word]] = Nil, val remaining: List[Wo
       })), remaining.tail)
     }
 
+  def mapRes[A](f: Word => A): List[Result[A]] = completed map { _ map f }
+
   // TODO: Partially cache the result
-  def render: String = completed.collect {
-    case Success(e) => e; case Failure(e, _) => e
-  } ++ remaining map { _.html } mkString " "
+  def render: String = completed.map(_.expected) ++ remaining map(_.html) mkString " "
 }

@@ -3,6 +3,7 @@ package me.priyesh.typist
 import monix.reactive.Observable
 
 sealed trait Result[+A] {
+  def expected: A
   def map[B](f: A => B): Result[B] = this match {
     case Success(e) => Success(f(e))
     case Failure(e, a) => Failure(f(e), f(a))
