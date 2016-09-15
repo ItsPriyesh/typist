@@ -1,10 +1,9 @@
-@import 'https://fonts.googleapis.com/css?family=Space+Mono';
+@import 'https://fonts.googleapis.com/css?family=Space+Mono:400,700';
 
 :root {
   --primary-color: #abb2bf;
-  --error-color: #e06c75;
-  --success-color: #98c379;
   --bg-color: #282c34;
+  --accent-color: #61afef;
 }
 
 body {
@@ -15,33 +14,57 @@ body {
 
 #content {
   position:absolute;
-  height: 400px;
+  height: 300px;
   width: 600px;
   left: 50%;
   top: 50%;
-  margin-top: -200px;
+  margin-top: -150px;
   margin-left: -300px;
 }
 
 #words-container {
   font-family: 'Space Mono', monospace;
-  font-size: 22px;
+  font-size: 24px;
   line-height: 2.5ex;
   max-height: 7.5ex;
   overflow: hidden;
   text-align: justify;
+  margin-bottom: 32px;
 }
 
 #input {
-  margin-top: 30px;
   text-align: center;
+  padding-bottom: 12px;
+  padding-top: 12px;
+  border-radius: 4px;
   font-family: 'Space Mono', monospace;
   border: 0;
+  display: block;
+  margin: 0 auto;
   background: none;
+  background-color: rgba(255, 255, 255, 0.1);
   font-size: 24px;
   outline: 0;
-  width: 100%;
+  width: 60%;
   color: var(--primary-color);
   tap-highlight-color: rgba(0,0,0,0);
   touch-callout: none;
+}
+
+#countdown {
+  color: var(--accent-color);
+  font-size: 26px;
+  font-family: 'Space Mono', monospace;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+#logo {
+  color: var(--accent-color);
+  font-size: 26px;
+  font-family: 'Space Mono', monospace;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
