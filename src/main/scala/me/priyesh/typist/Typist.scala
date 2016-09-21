@@ -1,7 +1,6 @@
 package me.priyesh.typist
 
 import monix.eval.Coeval
-import monix.execution.Ack.Continue
 import monix.reactive.Observable
 import org.scalajs.dom.raw.{Element, HTMLInputElement}
 import monix.execution.Scheduler.Implicits.global
@@ -9,7 +8,7 @@ import monix.execution.Scheduler.Implicits.global
 import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import scala.concurrent.duration._
-import org.scalajs.jquery.{JQuery, jQuery}
+import org.scalajs.jquery.jQuery
 import FilterNotByFirstOperator._
 
 import scala.scalajs.js
@@ -43,10 +42,7 @@ object Typist extends JSApp {
     src
       .map(ws => calcChildTopOffset(wordContainer.elem, ws.index))
       .filterNotByFirst
-      .foreach(_ => {
-        val lineHeight = jQuery(wordContainer.elem).css("line-height").stripSuffix("px").toDouble
-        wordContainer.elem.scrollTop += lineHeight
-      })
+      .foreach(_ => wordContainer.elem.scrollTop += cssPxAttribute(wordContainer.elem, "line-height"))
 
     src.connect()
   }

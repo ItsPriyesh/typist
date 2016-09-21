@@ -25,4 +25,6 @@ package object typist {
   case object Incorrect extends Highlight
 
   def elemById(id: String): Element = org.scalajs.dom.document.getElementById(id)
+  def cssPxAttribute(elem: Element, attr: String): Double =
+    org.scalajs.jquery.jQuery(elem).css(attr).stripSuffix("px").toDouble
 }
