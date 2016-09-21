@@ -10,6 +10,7 @@ import scala.scalajs.js.JSApp
 import scala.scalajs.js.annotation.JSExport
 import scala.concurrent.duration._
 import org.scalajs.jquery.{JQuery, jQuery}
+import FilterNotByFirstOperator._
 
 import scala.scalajs.js
 
@@ -37,21 +38,13 @@ object Typist extends JSApp {
       .takeUntil(Observable.evalDelayed(duration, ()))
       .lastF
       .map(s => Calculator.netWordsPerMinute(s.mapRes(_.string), duration))
-      .subscribe(wpm => {
-        println("wpm = " + wpm)
-        Continue
-      })
+      .foreach(wpm => println("wpm = " + wpm))
 
-    val topConstraint = calcChildTopOffset(wordContainer.elem, 0)
-    println(topConstraint)
     src
       .map(ws => calcChildTopOffset(wordContainer.elem, ws.index))
-      .doOnNext(println)
-      .filter(_ != topConstraint)
+      .filterNotByFirst
       .foreach(_ => {
         val lineHeight = jQuery(wordContainer.elem).css("line-height").stripSuffix("px").toDouble
-
-        println("scrolling by " + lineHeight)
         wordContainer.elem.scrollTop += lineHeight
       })
 
