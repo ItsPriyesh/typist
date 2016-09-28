@@ -11,10 +11,9 @@ object Typist extends JSApp {
 
   @JSExport
   def main() = new Engine(
-    container = Binder(elemById("words-container"), (ws: WordsState) => ws.render),
-    countdown = Binder(elemById("countdown"), (l: Long) => l.toString),
-    input = elemById("input").asInstanceOf[HTMLInputElement],
-    duration = 60 seconds,
-    words = WordSource.get
+    container = Binder(elemById("words-container"), _.render),
+    countdown = Binder(elemById("countdown"), _.toString),
+    input     = elemById("input").asInstanceOf[HTMLInputElement],
+    duration  = 60 seconds
   ).start()
 }

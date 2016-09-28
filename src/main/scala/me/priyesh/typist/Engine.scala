@@ -15,9 +15,9 @@ import monix.execution.Scheduler.Implicits.global
 final class Engine(container: Binder[Element, WordsState],
                    countdown: Binder[Element, Long],
                    input: HTMLInputElement,
-                   duration: FiniteDuration,
-                   words: List[String]) {
+                   duration: FiniteDuration) {
 
+  val words =  WordSource.takeFor(duration)
   val initialState = WordsState(words)
   val timer = countdownFrom(countdown, duration)
 
@@ -30,7 +30,7 @@ final class Engine(container: Binder[Element, WordsState],
 
   src
     .lastF
-    .map(s => Calculator.netWordsPerMinute(s.mapRes(_.string), duration))
+    .map(ws => Calculator.netWordsPerMinute(ws.results, duration))
     .foreach(wpm => println("wpm = " + wpm))
 
   src

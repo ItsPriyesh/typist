@@ -15,5 +15,5 @@ case class Failure[+A](expected: A, actual: A) extends Result[A]
 
 object Evaluator {
   private def evaluate[A](exp: A, act: A): Result[A] = if (exp == act) Success(exp) else Failure(exp, act)
-  def run[A](exp: List[A], act: Observable[A]): Observable[Result[A]] = Observable.fromIterable(exp).zipWith(act)(evaluate)
+  def run[A](exp: Seq[A], act: Observable[A]): Observable[Result[A]] = Observable.fromIterable(exp).zipWith(act)(evaluate)
 }

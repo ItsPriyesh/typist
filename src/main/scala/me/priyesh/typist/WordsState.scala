@@ -1,10 +1,10 @@
 package me.priyesh.typist
 
 object WordsState {
-  def apply(remaining: List[String]): WordsState = new WordsState(Nil, remaining.map(Word(_)))
+  def apply(remaining: Seq[String]): WordsState = new WordsState(Nil, remaining.map(Word(_)))
 }
 
-class WordsState(val completed: List[Result[Word]] = Nil, val remaining: List[Word]) {
+class WordsState(val completed: Seq[Result[Word]] = Nil, val remaining: Seq[Word]) {
   def advance(result: Result[String]): WordsState =
     if (remaining isEmpty) {
       this
@@ -17,7 +17,7 @@ class WordsState(val completed: List[Result[Word]] = Nil, val remaining: List[Wo
 
   def index: Int = completed.length
 
-  def mapRes[A](f: Word => A): List[Result[A]] = completed map { _ map f }
+  def results: Seq[Result[String]] = completed map { _ map { _.string } }
 
   // TODO: Partially cache the result
   def render: String = completed.map(_.expected) ++ remaining map(_.html) mkString " "

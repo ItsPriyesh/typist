@@ -1,5 +1,6 @@
 package me.priyesh
 
+import monix.execution.Scheduler
 import monix.reactive.Observable
 import monix.reactive.observables.ConnectableObservable
 import org.scalajs.dom.raw.Element
@@ -39,7 +40,7 @@ package object typist {
   @js.native
   trait Position extends js.Object { val top: Double = js.native }
 
-  def countdownFrom(binder: Binder[_, Long], from: Duration): ConnectableObservable[Long] = {
+  def countdownFrom(binder: Binder[_, Long], from: Duration)(implicit scheduler: Scheduler): ConnectableObservable[Long] = {
     Observable
       .interval(Duration(1, duration.SECONDS))
       .map(from.toSeconds - _)
