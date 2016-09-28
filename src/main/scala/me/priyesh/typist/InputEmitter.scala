@@ -6,10 +6,10 @@ import monix.reactive.observers.Subscriber
 import org.scalajs.dom.raw.HTMLInputElement
 import org.scalajs.dom.KeyboardEvent
 
-final class InputEmitter(target: HTMLInputElement, onStart: => Unit) extends Observable[String] {
+final case class InputEmitter(target: HTMLInputElement, onStart: () => Unit) extends Observable[String] {
   override def unsafeSubscribeFn(subscriber: Subscriber[String]): Cancelable =
     keyboardEvents(target)
-      .doOnStart(_ => onStart)
+      .doOnStart(_ => onStart())
       .filter(_.key == " ")
       .map(_ => {
         // TODO: Fix race (next item emits before target is cleared)

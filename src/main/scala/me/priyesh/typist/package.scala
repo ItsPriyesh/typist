@@ -1,6 +1,12 @@
 package me.priyesh
 
+import monix.reactive.Observable
+import monix.reactive.observables.ConnectableObservable
 import org.scalajs.dom.raw.Element
+
+import scala.concurrent.duration
+import scala.concurrent.duration.Duration
+import scala.scalajs.js
 
 package object typist {
 
@@ -27,4 +33,19 @@ package object typist {
   def elemById(id: String): Element = org.scalajs.dom.document.getElementById(id)
   def cssPxAttribute(elem: Element, attr: String): Double =
     org.scalajs.jquery.jQuery(elem).css(attr).stripSuffix("px").toDouble
+  def calcChildTopOffset(parent: Element, childIdx: Int): Double =
+    org.scalajs.jquery.jQuery(parent.children(childIdx)).position().asInstanceOf[Position].top
+
+  @js.native
+  trait Position extends js.Object { val top: Double = js.native }
+
+  def countdownFrom(binder: Binder[_, Long], from: Duration): ConnectableObservable[Long] = {
+    Observable
+      .interval(Duration(1, duration.SECONDS))
+      .map(from.toSeconds - _)
+      .doOnNext(binder bind)
+      .takeWhile(_ != 0)
+      .lastF
+      .publish
+  }
 }
