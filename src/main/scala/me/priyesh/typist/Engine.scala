@@ -3,15 +3,10 @@ package me.priyesh.typist
 import java.util.concurrent.TimeUnit
 
 import monix.eval.Coeval
-import monix.execution.{Ack, Scheduler}
-import monix.execution.Ack.{Continue, Stop}
 import monix.reactive.observables.ObservableLike._
-import monix.reactive.observers.Subscriber
 import org.scalajs.dom.raw.{Element, HTMLInputElement}
 
-import scala.concurrent.{Future, duration}
 import scala.concurrent.duration.{Duration, FiniteDuration}
-import scala.util.control.NonFatal
 import monix.execution.Scheduler.Implicits.global
 import monix.reactive.Observable
 import monix.reactive.observables.ConnectableObservable
@@ -21,7 +16,7 @@ final class Engine(container: Binder[Element, WordsState],
                    input: HTMLInputElement,
                    duration: FiniteDuration) {
 
-  val words =  WordSource.takeFor(duration)
+  val words = WordSource.takeFor(duration)
   val initialState = WordsState(words)
   val timer = countdownFrom(status, duration)
 
@@ -47,18 +42,23 @@ final class Engine(container: Binder[Element, WordsState],
     src.connect()
   }
 
-  private def countdownFrom(binder: Binder[_, Any], from: Duration): ConnectableObservable[Long] = {
-    Observable
-      .interval(Duration(1, TimeUnit.SECONDS))
-      .map(from.toSeconds - _)
-      .doOnNext(binder bind)
-      .takeWhile(_ != 0)
-      .lastF
-      .publish
-  }
+  private def countdownFrom(binder: Binder[_, Any], from: Duration): ConnectableObservable[Long] = Observable
+    .interval(Duration(1, TimeUnit.SECONDS))
+    .map(from.toSeconds - _)
+    .doOnNext(binder bind)
+    .takeWhile(_ != 0)
+    .lastF
+    .publish
 }
 
 private final class FilterNotByFirstOperator[A] extends Operator[A, A] {
+
+  import scala.concurrent.Future
+  import scala.util.control.NonFatal
+  import monix.execution.Ack.{Continue, Stop}
+  import monix.execution.Ack
+  import monix.reactive.observers.Subscriber
+
   override def apply(out: Subscriber[A]): Subscriber[A] =
     new Subscriber[A] {
       implicit val scheduler = out.scheduler
@@ -82,6 +82,7 @@ private final class FilterNotByFirstOperator[A] extends Operator[A, A] {
       }
 
       override def onError(ex: Throwable): Unit = out.onError(ex)
+
       override def onComplete(): Unit = out.onComplete()
     }
 }

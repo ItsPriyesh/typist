@@ -51,7 +51,7 @@ body {
   touch-callout: none;
 }
 
-#countdown {
+#status {
   color: var(--accent-color);
   font-size: 26px;
   font-family: 'Space Mono', monospace;

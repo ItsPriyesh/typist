@@ -12,7 +12,7 @@ object Typist extends JSApp {
   @JSExport
   def main() = new Engine(
     container = Binder(elemById("words-container"), _.render),
-    status = Binder(elemById("countdown"), _.toString),
+    status = Binder(elemById("status"), _.toString),
     input = elemById("input").asInstanceOf[HTMLInputElement],
     duration = 60 seconds
   ).start()
