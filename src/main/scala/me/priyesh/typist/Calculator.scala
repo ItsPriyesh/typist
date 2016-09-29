@@ -3,7 +3,7 @@ package me.priyesh.typist
 import scala.concurrent.duration.Duration
 
 object Calculator {
-  def netWordsPerMinute(results: Seq[Result[String]], duration: Duration): Int = {
+  def wpm(results: Seq[Result[String]], duration: Duration): Int = {
     val (letters, failedWords) = results.foldLeft(0, 0) {
       (m, n) => n match {
         case Success(e) => m.copy(_1 = m._1 + e.length)

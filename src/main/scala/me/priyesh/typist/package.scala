@@ -5,8 +5,6 @@ import monix.reactive.Observable
 import monix.reactive.observables.ConnectableObservable
 import org.scalajs.dom.raw.Element
 
-import scala.concurrent.duration
-import scala.concurrent.duration.Duration
 import scala.scalajs.js
 
 package object typist {
@@ -39,14 +37,4 @@ package object typist {
 
   @js.native
   trait Position extends js.Object { val top: Double = js.native }
-
-  def countdownFrom(binder: Binder[_, Long], from: Duration)(implicit scheduler: Scheduler): ConnectableObservable[Long] = {
-    Observable
-      .interval(Duration(1, duration.SECONDS))
-      .map(from.toSeconds - _)
-      .doOnNext(binder bind)
-      .takeWhile(_ != 0)
-      .lastF
-      .publish
-  }
 }

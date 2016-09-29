@@ -1,25 +1,29 @@
 package me.priyesh.typist
 
+import java.util.concurrent.TimeUnit
+
 import monix.eval.Coeval
-import monix.execution.Ack
+import monix.execution.{Ack, Scheduler}
 import monix.execution.Ack.{Continue, Stop}
 import monix.reactive.observables.ObservableLike._
 import monix.reactive.observers.Subscriber
 import org.scalajs.dom.raw.{Element, HTMLInputElement}
 
-import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{Future, duration}
+import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.util.control.NonFatal
 import monix.execution.Scheduler.Implicits.global
+import monix.reactive.Observable
+import monix.reactive.observables.ConnectableObservable
 
 final class Engine(container: Binder[Element, WordsState],
-                   countdown: Binder[Element, Long],
+                   status: Binder[Element, Any],
                    input: HTMLInputElement,
                    duration: FiniteDuration) {
 
   val words =  WordSource.takeFor(duration)
   val initialState = WordsState(words)
-  val timer = countdownFrom(countdown, duration)
+  val timer = countdownFrom(status, duration)
 
   val src = Evaluator
     .run(words, InputEmitter(input, onStart = () => timer.connect()))
@@ -30,8 +34,8 @@ final class Engine(container: Binder[Element, WordsState],
 
   src
     .lastF
-    .map(ws => Calculator.netWordsPerMinute(ws.results, duration))
-    .foreach(wpm => println("wpm = " + wpm))
+    .map(ws => s"Net WPM = ${Calculator.wpm(ws.results, duration)}")
+    .foreach(status bind)
 
   src
     .map(ws => calcChildTopOffset(container.elem, ws.index))
@@ -41,6 +45,16 @@ final class Engine(container: Binder[Element, WordsState],
   def start() = {
     container bind initialState
     src.connect()
+  }
+
+  private def countdownFrom(binder: Binder[_, Any], from: Duration): ConnectableObservable[Long] = {
+    Observable
+      .interval(Duration(1, TimeUnit.SECONDS))
+      .map(from.toSeconds - _)
+      .doOnNext(binder bind)
+      .takeWhile(_ != 0)
+      .lastF
+      .publish
   }
 }
 
