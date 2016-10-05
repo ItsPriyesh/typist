@@ -19,6 +19,11 @@ package object typist {
   def calcChildTopOffset(parent: Element, childIdx: Int): Double =
     org.scalajs.jquery.jQuery(parent.children(childIdx)).position().asInstanceOf[Position].top
 
+  def debug[A](a: A): A = {
+    println(a.toString)
+    a
+  }
+
   @js.native
   trait Position extends js.Object { val top: Double = js.native }
 }

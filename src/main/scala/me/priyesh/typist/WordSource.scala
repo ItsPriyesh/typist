@@ -5,7 +5,7 @@ import scala.util.Random
 
 object WordSource {
   final def takeFor(duration: Duration): List[String] =
-    Random.shuffle(words).take(Math.floor(duration.toMinutes * 250).toInt).toList
+    Random.shuffle(words).take(Math.floor(duration.toSeconds / 60.0 * 250).toInt).toList
 
   val words: Seq[String] = ("help he low was line for before on turn are cause with same as mean differ his move " +
     "they right be boy at old one too have does this tell from sentence or set had three by want hot air but well " +
