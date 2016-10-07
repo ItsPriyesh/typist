@@ -1,8 +1,5 @@
 package me.priyesh
 
-import monix.execution.Scheduler
-import monix.reactive.Observable
-import monix.reactive.observables.ConnectableObservable
 import org.scalajs.dom.raw.Element
 
 import scala.scalajs.js

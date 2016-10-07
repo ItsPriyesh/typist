@@ -2,6 +2,7 @@ package me.priyesh.typist
 
 import java.util.concurrent.TimeUnit
 
+import me.priyesh.typist.Calculator.Report
 import monix.eval.Coeval
 import monix.reactive.observables.ObservableLike._
 import org.scalajs.dom.raw.{Element, HTMLInputElement}
@@ -12,13 +13,14 @@ import monix.reactive.Observable
 import monix.reactive.observables.ConnectableObservable
 
 final class Engine(container: Binder[Element, WordsState],
-                   status: Binder[Element, Any],
+                   countdown: Binder[Element, Long],
+                   results: Binder[Element, Report],
                    input: HTMLInputElement,
                    duration: FiniteDuration) {
 
   val words = WordSource.takeFor(duration)
   val initialState = WordsState(words)
-  val timer = countdownFrom(status, duration)
+  val timer = countdownFrom(countdown, duration)
 
   val src = Evaluator
     .run(words, InputEmitter(input, onStart = () => timer.connect()))
@@ -29,8 +31,8 @@ final class Engine(container: Binder[Element, WordsState],
 
   src
     .lastF
-    .map(ws => s"Net WPM = ${Calculator.wpm(ws.results, duration)}")
-    .foreach(status bind)
+    .map(ws => Calculator.report(ws.results, duration))
+    .foreach(results bind)
 
   src
     .map(ws => calcChildTopOffset(container.elem, ws.index))
@@ -42,7 +44,7 @@ final class Engine(container: Binder[Element, WordsState],
     src.connect()
   }
 
-  private def countdownFrom(binder: Binder[_, Any], from: Duration): ConnectableObservable[Long] = Observable
+  private def countdownFrom(binder: Binder[_, Long], from: Duration): ConnectableObservable[Long] = Observable
     .interval(Duration(1, TimeUnit.SECONDS))
     .map(from.toSeconds - _)
     .doOnNext(binder bind)

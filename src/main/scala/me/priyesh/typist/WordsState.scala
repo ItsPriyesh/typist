@@ -1,7 +1,7 @@
 package me.priyesh.typist
 
 object WordsState {
-  def apply(remaining: List[String]): WordsState = new WordsState(Nil, remaining.map(Word(_)))
+  def apply(remaining: List[String]): WordsState = new WordsState(Nil, remaining map { Word(_) })
 }
 
 class WordsState(val completed: List[Result[Word]] = Nil, val remaining: List[Word]) {
@@ -15,7 +15,7 @@ class WordsState(val completed: List[Result[Word]] = Nil, val remaining: List[Wo
       })), remaining.tail)
     }
 
-  def index: Int = completed.length
+  def index: Int = completed length
 
   def results: List[Result[String]] = completed map { _ map { _.string } }
 

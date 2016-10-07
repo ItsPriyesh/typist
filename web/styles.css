@@ -51,13 +51,17 @@ body {
   touch-callout: none;
 }
 
-#status {
+#countdown {
   color: var(--accent-color);
   font-size: 26px;
   font-family: 'Space Mono', monospace;
   position: absolute;
   left: 0;
   bottom: 0;
+}
+
+#results {
+  display: hidden;
 }
 
 #logo {
